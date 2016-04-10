@@ -1,0 +1,4 @@
+default:
+  token: 183729583:AAEpliR2RrOiZ1OXNwqNj_6x9d8Kbj29dqQ
+  request:
+    programs: 'http://localhost:3000/programs'
