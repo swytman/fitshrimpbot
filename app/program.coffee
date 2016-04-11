@@ -1,11 +1,20 @@
-request = require('request')
+rp = require('request-promise')
+Q       = require("q")
 global.config = require('konfig')()
 module.exports = class Program
 
-  constructor: () ->
-    @url = config.app.request.programs
+  constructor: ->
+    @options = {
+      uri: config.app.request.programs,
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true
+    }
+
   search: ->
-    request @url, (error, response, body) ->
-      console.log(@url)
-      return 'Ошибка' if error
+    rp(@options).then((body) ->
       return body
+    ).catch (err) ->
+      console.log(err)
+      return err
