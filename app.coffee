@@ -1,13 +1,38 @@
 TGbot = require('node-telegram-bot-api')
 Program = require('./app/program')
+urlencode = require('urlencode')
 Subscription = require('./app/subscription')
 require('./app/helpers')
+schedule = require('node-schedule');
 
 token = config.app.token
 bot = new TGbot(token, {polling: true})
+
 console.log(token)
 
 
+
+j = schedule.scheduleJob('* * * * *', ->
+  subscription = new Subscription
+  subscription.schedule().then((body)->
+    if body.subscriptions.length > 0
+      for v in body.subscriptions
+        console.log(v.message)
+        bot.sendMessage v.id, message_from_server(v), {parse_mode: 'Markdown'}
+
+
+  ).catch (err) ->
+    console.log err
+)
+
+message_from_server = (body) ->
+  decoded = body.message.replace(/<br>/g, '\n')
+  console.log(decoded)
+  decoded
+
+
+bot_standart_response = (bot, id, text ) ->
+  bot.sendMessage id, text, {parse_mode: 'Markdown'}, {parse_mode: 'Markdown'}
 
 bot.on 'message', (msg) ->
   console.log(msg)
@@ -16,30 +41,41 @@ bot.on 'message', (msg) ->
   if msg.text == '/programs'
     programs = new Program
     programs.search().then((body)->
-      if body.programs.length > 0
-        str = ''
-        str+= "Вам доступны следующие программы:\n------------------\n"
-        for _,v of body.programs
-          console.log(body.programs)
-          str+="ID:#{v.id} - *#{v.title}*\n#{v.description}\n"
-          str+="Всего дней - #{v.program_days.length}\n"
-          str+="------------------\n"
-        str+= "Наберите */sign ID*, чтобы подписаться на программу"
-        bot.sendMessage msg.from.id, str, {parse_mode: 'Markdown'}
-
-      else
-        bot.sendMessage(msg.from.id, "Нет доступных программ")
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
-      bot.sendMessage(msg.from.id, 'Ошибочка вышла(' + err)
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
 
 
-  #   /sign
+#   /sign
   if msg.text.startsWith '/sign'
     id = msg.text.split(" ")[1]
     subscription = new Subscription
     subscription.sign(id, msg.from.id).then((body)->
-      str= "Поздравляем! Вы подписались на програму №#{body.program_id}\nСтарт #{body.start_date}"
-      bot.sendMessage msg.from.id, str
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
-      bot.sendMessage(msg.from.id, 'Ошибочка вышла(' + err)
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
 
+#   /unsign
+  if msg.text.startsWith '/unsign'
+    id = msg.text.split(" ")[1]
+    subscription = new Subscription
+    subscription.unsign(id, msg.from.id).then((body)->
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
+    ).catch (err) ->
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
+
+  #   /mysigns
+  if msg.text.startsWith '/mysigns'
+    subscription = new Subscription
+    subscription.signs(msg.from.id).then((body)->
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
+    ).catch (err) ->
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
+
+  #   /mysigns
+  if msg.text.startsWith '/today'
+    subscription = new Subscription
+    subscription.today(msg.from.id).then((body)->
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
+    ).catch (err) ->
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
