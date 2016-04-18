@@ -12,7 +12,7 @@ console.log(token)
 
 
 
-j = schedule.scheduleJob('* * * * *', ->
+j = schedule.scheduleJob('0 8 * * *', ->
   subscription = new Subscription
   subscription.schedule().then((body)->
     if body.subscriptions.length > 0
