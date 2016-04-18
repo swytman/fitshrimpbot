@@ -2,13 +2,14 @@
 <module type="RUBY_MODULE" version="4">
   <component name="CompassSettings">
     <option name="compassExecutableFilePath" value="$USER_HOME$/.rvm/gems/ruby-2.2.1/gems/compass-1.0.3/bin/compass" />
-    <option name="compassSupportEnabled" value="true" />
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="capistrano (v3.4.1, RVM: ruby-2.2.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="capistrano-npm (v1.0.2, RVM: ruby-2.2.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="capistrano-pm2 (v1.0.2, RVM: ruby-2.2.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="i18n (v0.7.0, RVM: ruby-2.2.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="net-scp (v1.2.1, RVM: ruby-2.2.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="net-ssh (v3.1.1, RVM: ruby-2.2.1) [gem]" level="application" />
@@ -16,4 +17,3 @@
     <orderEntry type="library" scope="PROVIDED" name="sshkit (v1.9.0, RVM: ruby-2.2.1) [gem]" level="application" />
   </component>
 </module>
-

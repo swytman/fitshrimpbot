@@ -17,15 +17,10 @@ j = schedule.scheduleJob('notify_day', '0 8 * * *', ->
   subscription.schedule().then((body)->
     if body.subscriptions.length > 0
       for v in body.subscriptions
-        console.log(v.message)
         bot.sendMessage v.id, message_from_server(v), {parse_mode: 'Markdown'}
-
-
   ).catch (err) ->
     console.log err
 )
-
-
 
 
 message_from_server = (body) ->
@@ -34,22 +29,27 @@ message_from_server = (body) ->
   decoded
 
 
-bot_standart_response = (bot, id, text ) ->
-  bot.sendMessage id, text, {parse_mode: 'Markdown'}, {parse_mode: 'Markdown'}
-
 bot.on 'message', (msg) ->
   console.log(msg)
 
 #  /programs
   if msg.text == '/programs'
     programs = new Program
-    programs.search().then((body)->
+    programs.programs().then((body)->
       bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
 
+#  /details ID
+  if msg.text.startsWith '/details'
+    programs = new Program
+    id = msg.text.split(" ")[1]
+    programs.details(id).then((body)->
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
+    ).catch (err) ->
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
 
-#   /sign
+#   /sign ID
   if msg.text.startsWith '/sign'
     id = msg.text.split(" ")[1]
     subscription = new Subscription
@@ -58,7 +58,7 @@ bot.on 'message', (msg) ->
     ).catch (err) ->
       bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
 
-#   /unsign
+#   /unsign ID
   if msg.text.startsWith '/unsign'
     id = msg.text.split(" ")[1]
     subscription = new Subscription
@@ -70,15 +70,24 @@ bot.on 'message', (msg) ->
   #   /mysigns
   if msg.text.startsWith '/mysigns'
     subscription = new Subscription
-    subscription.signs(msg.from.id).then((body)->
+    subscription.mysigns(msg.from.id).then((body)->
       bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
 
-  #   /mysigns
+  #   /today
   if msg.text.startsWith '/today'
     subscription = new Subscription
     subscription.today(msg.from.id).then((body)->
+      bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
+    ).catch (err) ->
+      bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
+
+  #   /day ID
+  if msg.text.startsWith '/day'
+    id = msg.text.split(" ")[1]
+    subscription = new Subscription
+    subscription.day(id, msg.from.id).then((body)->
       bot.sendMessage msg.from.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.from.id, 'Ошибочка вышла' + err
