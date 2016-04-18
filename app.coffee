@@ -12,7 +12,7 @@ console.log(token)
 
 
 
-j = schedule.scheduleJob('0 8 * * *', ->
+j = schedule.scheduleJob('notify_day', '0 8 * * *', ->
   subscription = new Subscription
   subscription.schedule().then((body)->
     if body.subscriptions.length > 0
@@ -24,6 +24,9 @@ j = schedule.scheduleJob('0 8 * * *', ->
   ).catch (err) ->
     console.log err
 )
+
+
+
 
 message_from_server = (body) ->
   decoded = body.message.replace(/<br>/g, '\n')
