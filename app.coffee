@@ -54,7 +54,7 @@ bot.on 'message', (msg) ->
   if msg.text.startsWith '/sign'
     id = msg.text.split(" ")[1]
     subscription = new Subscription
-    subscription.sign(id, msg.chat.id).then((body)->
+    subscription.sign(id, msg.from.id).then((body)->
       bot.sendMessage msg.chat.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.chat.id, 'Ошибочка вышла' + err
@@ -63,7 +63,7 @@ bot.on 'message', (msg) ->
   if msg.text.startsWith '/unsign'
     id = msg.text.split(" ")[1]
     subscription = new Subscription
-    subscription.unsign(id, msg.chat.id).then((body)->
+    subscription.unsign(id, msg.from.id).then((body)->
       bot.sendMessage msg.chat.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.chat.id, 'Ошибочка вышла' + err
@@ -71,7 +71,7 @@ bot.on 'message', (msg) ->
   #   /mysigns
   if msg.text.startsWith '/mysigns'
     subscription = new Subscription
-    subscription.mysigns(msg.chat.id).then((body)->
+    subscription.mysigns(msg.from.id).then((body)->
       bot.sendMessage msg.chat.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.chat.id, 'Ошибочка вышла' + err
@@ -79,7 +79,7 @@ bot.on 'message', (msg) ->
   #   /today
   if msg.text.startsWith '/today'
     subscription = new Subscription
-    subscription.today(msg.chat.id).then((body)->
+    subscription.today(msg.from.id).then((body)->
       bot.sendMessage msg.chat.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.chat.id, 'Ошибочка вышла' + err
@@ -88,7 +88,7 @@ bot.on 'message', (msg) ->
   if msg.text.startsWith '/day'
     id = msg.text.split(" ")[1]
     subscription = new Subscription
-    subscription.day(id, msg.chat.id).then((body)->
+    subscription.day(id, msg.from.id).then((body)->
       bot.sendMessage msg.chat.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.chat.id, 'Ошибочка вышла' + err
