@@ -4,17 +4,18 @@ module.exports = class Program
 
 
   constructor: ->
-    @url = config.app.backend.host + config.app.backend.subscriptions
-
-  sign: (program_id, telegram_id) ->
-    options = {
-      uri: @url+'sign' ,
-      body: {program_id: program_id, telegram_id: telegram_id}
+    @url = config.app.backend.host
+    @options = options = {
       headers: {
         'User-Agent': 'Request-Promise'
       },
       json: true
     }
+
+  sign: (program_id, telegram_id) ->
+    options = @options
+    options.uri = @url+'sign'
+    options.body = {program_id: program_id, telegram_id: telegram_id}
 
     rp(options).then((body) ->
       return body
@@ -22,29 +23,19 @@ module.exports = class Program
       return err
 
   unsign: (program_id, telegram_id) ->
-    options = {
-      uri: @url+'unsign' ,
-      body: {program_id: program_id, telegram_id: telegram_id}
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
-    }
+    options = @options
+    options.uri = @url+'unsign'
+    options.body = {program_id: program_id, telegram_id: telegram_id}
 
     rp(options).then((body) ->
       return body
     ).catch (err) ->
       return err
 
-  signs: (telegram_id) ->
-    options = {
-      uri: @url+'signs' ,
-      body: {telegram_id: telegram_id}
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
-    }
+  mysigns: (telegram_id) ->
+    options = @options
+    options.uri = @url+'mysigns'
+    options.body = {telegram_id: telegram_id}
 
     rp(options).then((body) ->
       return body
@@ -52,14 +43,10 @@ module.exports = class Program
       return err
 
   today: (telegram_id) ->
-    options = {
-      uri: @url+'today' ,
-      body: {telegram_id: telegram_id}
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
-    }
+
+    options = @options
+    options.uri = @url+'today'
+    options.body = {telegram_id: telegram_id}
 
     rp(options).then((body) ->
       return body
@@ -67,13 +54,19 @@ module.exports = class Program
       return err
 
   schedule: ->
-    options = {
-      uri: @url+'schedule' ,
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true
-    }
+    options = @options
+    options.uri = @url+'schedule'
+
+    rp(options).then((body) ->
+      return body
+    ).catch (err) ->
+      return err
+
+  day: (order, telegram_id) ->
+
+    options = @options
+    options.uri = @url+'day'
+    options.body = {order: order, telegram_id: telegram_id}
 
     rp(options).then((body) ->
       return body
