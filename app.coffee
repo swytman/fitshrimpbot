@@ -3,10 +3,13 @@ Program = require('./app/program')
 urlencode = require('urlencode')
 Subscription = require('./app/subscription')
 require('./app/helpers')
+
 schedule = require('node-schedule');
 
 token = config.app.token
 bot = new TGbot(token, {polling: true})
+bot_commands = require('./app/dicts/commands')
+
 
 console.log(token)
 
@@ -92,3 +95,10 @@ bot.on 'message', (msg) ->
       bot.sendMessage msg.chat.id, message_from_server(body), {parse_mode: 'Markdown'}
     ).catch (err) ->
       bot.sendMessage msg.chat.id, 'Ошибочка вышла' + err
+
+
+  if msg.text.startsWith '/help'
+    str = 'Список доступных комманд: \n'
+    for k, v of bot_commands
+      str+="*#{k}* - #{v}\n"
+    bot.sendMessage msg.chat.id, str, {parse_mode: 'Markdown'}
